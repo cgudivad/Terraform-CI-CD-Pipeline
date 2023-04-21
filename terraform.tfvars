@@ -1,4 +1,4 @@
-network = "vpc_network"
-subnetwork = "test_subnetwork"
+network = "vpc-network"
+subnetwork = "test-subnetwork"
 project = "cg-project-374417"
 
