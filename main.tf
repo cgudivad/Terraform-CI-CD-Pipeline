@@ -1,20 +1,24 @@
+variable "project" {}
+variable "network" {}
+variable "subnetwork" {}
+
 resource "google_compute_network" "vpc_network" {
-  project                 = "cg-project-374417"
-  name                    = "vpc-network"
+  project                 = var.project
+  name                    = var.network
   auto_create_subnetworks = false
   mtu                     = 1460
 }
 
 resource "google_compute_subnetwork" "test_subnetwork" {
-  project       = "cg-project-374417"
-  name          = "test-subnetwork"
+  project       = var.project
+  name          = var.subnetwork
   network       = google_compute_network.vpc_network.name
   ip_cidr_range = "10.0.0.0/22"
   region        = "us-central1"
 }
 
 resource "google_compute_instance" "default" {
-  project      = "cg-project-374417"
+  project      = var.project
   count        = 2
   name         = "tf-vm-${count.index}"
   machine_type = "e2-medium"
