@@ -19,7 +19,7 @@ resource "google_compute_subnetwork" "test_subnetwork" {
 
 resource "google_compute_instance" "default" {
   project      = var.project
-  count        = 2
+  count        = 3
   name         = "tf-vm-${count.index}"
   machine_type = "e2-medium"
   zone         = "us-central1-a"
