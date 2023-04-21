@@ -37,7 +37,7 @@ resource "google_compute_firewall" "rules" {
 
 resource "google_compute_instance" "default" {
   project      = var.project
-  count        = 1
+  count        = 2
   name         = "tf-vm-${count.index}"
   machine_type = "e2-medium"
   zone         = var.zone
@@ -67,8 +67,19 @@ resource "google_sql_database_instance" "master" {
   name = "mysqlinstance"
   database_version = "MYSQL_8_0"
   region = var.region
+  deletion_protection = false
   settings {
     tier = "db-n1-standard-2"
+	ip_configuration {
+	  dynamic "authorized_networks" {
+        for_each = google_compute_instance.default
+        iterator = default
+        content {
+          name  = default.value.name
+          value = default.value.network_interface.0.access_config.0.nat_ip
+        }
+      }
+    }
   }
 }
 
