@@ -1,6 +1,8 @@
 variable "project" {}
 variable "network" {}
 variable "subnetwork" {}
+variable "region" {}
+variable "zone" {}
 
 resource "google_compute_network" "vpc_network" {
   project                 = var.project
@@ -14,7 +16,7 @@ resource "google_compute_subnetwork" "test_subnetwork" {
   name          = var.subnetwork
   network       = google_compute_network.vpc_network.name
   ip_cidr_range = "10.0.0.0/22"
-  region        = "us-central1"
+  region        = var.region
 }
 
 resource "google_compute_firewall" "rules" {
@@ -38,7 +40,7 @@ resource "google_compute_instance" "default" {
   count        = 1
   name         = "tf-vm-${count.index}"
   machine_type = "e2-medium"
-  zone         = "us-central1-a"
+  zone         = var.zone
 
   tags = ["web-server"]
 
@@ -64,14 +66,14 @@ resource "google_compute_instance" "default" {
 resource "google_sql_database_instance" "master" {
   name = "mysqlinstance"
   database_version = "MYSQL_8_0"
-  region = "us-central1"
+  region = var.region
   settings {
     tier = "db-n1-standard-2"
   }
 }
 
 resource "google_sql_database" "database" {
-  name = "mttestdatabase"
+  name = "mytestdatabase"
   instance = google_sql_database_instance.master.name
   charset = "utf8"
   collation = "utf8_general_ci"
