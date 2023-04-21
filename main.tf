@@ -17,9 +17,25 @@ resource "google_compute_subnetwork" "test_subnetwork" {
   region        = "us-central1"
 }
 
+resource "google_compute_firewall" "rules" {
+  project     = var.project
+  name        = "tf-firewall-rule"
+  network     = google_compute_network.vpc_network.name
+  description = "Creates firewall rule targeting tagged instances"
+
+  allow {
+    protocol  = "tcp"
+    ports     = ["22", "80", "443"]
+  }
+
+  source_ranges = ["0.0.0.0/0"]
+
+  target_tags = ["web-server"]
+}
+
 resource "google_compute_instance" "default" {
   project      = var.project
-  count        = 3
+  count        = 1
   name         = "tf-vm-${count.index}"
   machine_type = "e2-medium"
   zone         = "us-central1-a"
@@ -43,4 +59,27 @@ resource "google_compute_instance" "default" {
       // Ephemeral public IP
     }
   }
+}
+
+resource "google_sql_database_instance" "master" {
+  name = "mysqlinstance"
+  database_version = "MYSQL_8_0"
+  region = "us-central1"
+  settings {
+    tier = "db-n1-standard-2"
+  }
+}
+
+resource "google_sql_database" "database" {
+  name = "mttestdatabase"
+  instance = google_sql_database_instance.master.name
+  charset = "utf8"
+  collation = "utf8_general_ci"
+}
+
+resource "google_sql_user" "users" {
+  name = "root"
+  instance = google_sql_database_instance.master.name
+  host = "%"
+  password = "Chethan@12"
 }
