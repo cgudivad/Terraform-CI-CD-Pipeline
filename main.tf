@@ -66,6 +66,7 @@ resource "google_compute_instance" "default" {
 resource "google_sql_database_instance" "master" {
   name = "mysqlinstance"
   database_version = "MYSQL_8_0"
+  project      = var.project
   region = var.region
   settings {
     tier = "db-n1-standard-2"
