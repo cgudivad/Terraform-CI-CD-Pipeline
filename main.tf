@@ -61,6 +61,15 @@ resource "google_compute_instance" "default" {
       // Ephemeral public IP
     }
   }
+
+  metadata = {
+    startup-script = <<-EOF
+    #!/usr/env/bin bash
+
+    sudo apt update && sudo apt install mariadb-client-10.5 -y
+
+    EOF
+  }
 }
 
 resource "google_sql_database_instance" "master" {
