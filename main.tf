@@ -64,7 +64,7 @@ resource "google_compute_instance" "default" {
 
   metadata = {
     startup-script = <<-EOF
-    #!/usr/env/bin bash
+    #!/usr/bin/env bash
 
     sudo apt update && sudo apt install mariadb-client-10.5 -y
 
