@@ -3,19 +3,36 @@ variable "network" {}
 variable "subnetwork" {}
 variable "region" {}
 variable "zone" {}
+variable "CIDR" {}
 
 resource "google_compute_network" "vpc_network" {
   project                 = var.project
   name                    = var.network
-  auto_create_subnetworks = false
   mtu                     = 1460
+  auto_create_subnetworks                   = false
+}
+
+resource "google_compute_global_address" "private_ip_address" {
+
+  name          = "private-ip-address"
+  purpose       = "VPC_PEERING"
+  address_type  = "INTERNAL"
+  prefix_length = 16
+  network       = google_compute_network.vpc_network.id
+}
+
+resource "google_service_networking_connection" "private_vpc_connection" {
+
+  network                 = google_compute_network.vpc_network.id
+  service                 = "servicenetworking.googleapis.com"
+  reserved_peering_ranges = [google_compute_global_address.private_ip_address.name]
 }
 
 resource "google_compute_subnetwork" "test_subnetwork" {
   project       = var.project
   name          = var.subnetwork
   network       = google_compute_network.vpc_network.name
-  ip_cidr_range = "10.0.0.0/22"
+  ip_cidr_range = var.CIDR
   region        = var.region
 }
 
@@ -73,17 +90,16 @@ resource "google_sql_database_instance" "master" {
   project      = var.project
   region = var.region
   deletion_protection = false
+  depends_on = [google_service_networking_connection.private_vpc_connection]
+
   settings {
     tier = "db-n1-standard-2"
-	ip_configuration {
-	  dynamic "authorized_networks" {
-        for_each = google_compute_instance.default
-        iterator = default
-        content {
-          name  = default.value.name
-          value = default.value.network_interface.0.access_config.0.nat_ip
-        }
-      }
+    ip_configuration {
+		
+      ipv4_enabled                                  = false
+      private_network                               = google_compute_network.vpc_network.id
+      enable_private_path_for_google_cloud_services = true
+
     }
   }
 }
