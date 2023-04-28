@@ -8,4 +8,6 @@ variable "zone" {
 }
 variable "vmcount" {
 }
+variable "vmname" {
+}
 

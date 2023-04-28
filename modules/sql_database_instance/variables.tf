@@ -6,3 +6,5 @@ variable "private_vpc" {
 }
 variable "networkid" {
 }
+variable "sqlinstancename" {
+}

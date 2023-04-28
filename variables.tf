@@ -10,6 +10,26 @@ variable "subnetwork" {
         default = "staging-test-subnetwork"
 }
 
+variable "firewall" {
+        default = "staging-firewall-rule"
+}
+
+variable "vmname" {
+        default = "staging-tf-vm-"
+}
+
+variable "privateipname" {
+        default = "staging-private-ip"
+}
+
+variable "privatevpcname" {
+        default = "staging-private-vpc"
+}
+
+variable "sqlinstancename" {
+        default = "staging-sql-instance"
+}
+
 variable "CIDR" {
         default = "10.10.1.0/24"
 }
