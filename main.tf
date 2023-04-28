@@ -1,10 +1,3 @@
-variable "project" {}
-variable "network" {}
-variable "subnetwork" {}
-variable "region" {}
-variable "zone" {}
-variable "CIDR" {}
-
 resource "google_compute_network" "vpc_network" {
   project                 = var.project
   name                    = var.network

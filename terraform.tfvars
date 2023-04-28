@@ -1,6 +1,0 @@
-network = "vpc-network"
-subnetwork = "test-subnetwork"
-project = "cg-project-374417"
-region = "us-central1"
-zone = "us-central1-a"
-CIDR = "10.10.1.0/24"
