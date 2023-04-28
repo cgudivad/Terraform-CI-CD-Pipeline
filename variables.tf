@@ -1,5 +1,5 @@
 variable "network" {
-	default = "dev-vpc-network"
+	default = "staging-vpc-network"
 }
 
 variable "project" {
@@ -7,7 +7,7 @@ variable "project" {
 }
 
 variable "subnetwork" {
-        default = "dev-test-subnetwork"
+        default = "staging-test-subnetwork"
 }
 
 variable "CIDR" {
