@@ -55,7 +55,7 @@ resource "google_compute_firewall" "rules" {
 
 resource "google_compute_instance" "default" {
   project      = var.project
-  count        = 2
+  count        = 3
   name         = "tf-vm-${count.index}"
   machine_type = "e2-medium"
   zone         = var.zone
