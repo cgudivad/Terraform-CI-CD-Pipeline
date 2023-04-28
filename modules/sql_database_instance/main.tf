@@ -1,5 +1,5 @@
 resource "google_sql_database_instance" "master" {
-  name = "mysqlinstance"
+  name = var.sqlinstancename
   database_version = "MYSQL_8_0"
   project      = var.project
   region = var.region

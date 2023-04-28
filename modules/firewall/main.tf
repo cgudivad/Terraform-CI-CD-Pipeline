@@ -1,6 +1,6 @@
 resource "google_compute_firewall" "rules" {
   project     = var.project
-  name        = "tf-firewall-rule"
+  name        = var.firewall
   network     = var.network
   description = "Creates firewall rule targeting tagged instances"
 
