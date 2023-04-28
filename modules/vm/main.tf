@@ -1,6 +1,6 @@
 resource "google_compute_instance" "default" {
   project      = var.project
-  count        = 2
+  count        = var.vmcount
   name         = "tf-vm-${count.index}"
   machine_type = "e2-medium"
   zone         = var.zone

@@ -36,6 +36,7 @@ module "vm" {
         network                 = module.subnetwork.network
         subnetwork              = module.subnetwork.subnetwork
         zone                    = var.zone
+	vmcount			= var.vmcount
 
 }
 

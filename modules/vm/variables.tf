@@ -6,3 +6,6 @@ variable "subnetwork" {
 }
 variable "zone" {
 }
+variable "vmcount" {
+}
+
