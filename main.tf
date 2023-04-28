@@ -1,115 +1,88 @@
-resource "google_compute_network" "vpc_network" {
-  project                 = var.project
-  name                    = var.network
-  mtu                     = 1460
-  auto_create_subnetworks                   = false
+module "vpc" {
+
+        source = "./modules/vpc"
+
+        project                 = var.project
+        network                 = var.network
+
 }
 
-resource "google_compute_global_address" "private_ip_address" {
+module "subnetwork" {
 
-  name          = "private-ip-address"
-  project       = var.project
-  purpose       = "VPC_PEERING"
-  address_type  = "INTERNAL"
-  prefix_length = 16
-  network       = google_compute_network.vpc_network.id
+        source = "./modules/subnetwork"
+
+        project                 = var.project
+        network                 = module.vpc.network
+        subnetwork              = var.subnetwork
+        CIDR                    = var.CIDR
+        region                  = var.region
+
 }
 
-resource "google_service_networking_connection" "private_vpc_connection" {
+module "firewall" {
 
-  network                 = google_compute_network.vpc_network.id
-  service                 = "servicenetworking.googleapis.com"
-  reserved_peering_ranges = [google_compute_global_address.private_ip_address.name]
+        source = "./modules/firewall"
+
+        project                 = var.project
+        network                 = module.vpc.network
+
 }
 
-resource "google_compute_subnetwork" "test_subnetwork" {
-  project       = var.project
-  name          = var.subnetwork
-  network       = google_compute_network.vpc_network.name
-  ip_cidr_range = var.CIDR
-  region        = var.region
+module "vm" {
+
+        source = "./modules/vm"
+
+        project                 = var.project
+        network                 = module.subnetwork.network
+        subnetwork              = module.subnetwork.subnetwork
+        zone                    = var.zone
+
 }
 
-resource "google_compute_firewall" "rules" {
-  project     = var.project
-  name        = "tf-firewall-rule"
-  network     = google_compute_network.vpc_network.name
-  description = "Creates firewall rule targeting tagged instances"
+module "private_ip" {
 
-  allow {
-    protocol  = "tcp"
-    ports     = ["22", "80", "443"]
-  }
+        source = "./modules/private_ip_address"
+	
+	project                 = var.project
+        networkid               = module.vpc.id
 
-  source_ranges = ["0.0.0.0/0"]
-
-  target_tags = ["web-server"]
 }
 
-resource "google_compute_instance" "default" {
-  project      = var.project
-  count        = 3
-  name         = "tf-vm-${count.index}"
-  machine_type = "e2-medium"
-  zone         = var.zone
+module "private_vpc" {
 
-  tags = ["web-server"]
+	source = "./modules/private_vpc_connection"
 
-  boot_disk {
-    initialize_params {
-      image = "debian-cloud/debian-11"
-      labels = {
-        my_label = "value"
-      }
-    }
-  }
+	networkid		= module.vpc.id
+	privateipaddressname	= module.private_ip.private_ip_name
 
-  network_interface {
-    network = google_compute_network.vpc_network.name
-    subnetwork = google_compute_subnetwork.test_subnetwork.name
-    subnetwork_project = var.project
-    access_config {
-      // Ephemeral public IP
-    }
-  }
-
-  metadata = {
-    startup-script = file("script.sh")
-  }
 }
 
-resource "google_sql_database_instance" "master" {
-  name = "mysqlinstance"
-  database_version = "MYSQL_8_0"
-  project      = var.project
-  region = var.region
-  deletion_protection = false
-  depends_on = [google_service_networking_connection.private_vpc_connection]
+module "sqldbinstance" {
 
-  settings {
-    tier = "db-n1-standard-2"
-    ip_configuration {
-		
-      ipv4_enabled                                  = false
-      private_network                               = google_compute_network.vpc_network.id
-      enable_private_path_for_google_cloud_services = true
+	source = "./modules/sql_database_instance"
 
-    }
-  }
+	project                 = var.project
+	region                  = var.region
+	private_vpc		= module.private_vpc
+	networkid		= module.vpc.id
+
 }
 
-resource "google_sql_database" "database" {
-  name = "mytestdatabase"
-  project      = var.project
-  instance = google_sql_database_instance.master.name
-  charset = "utf8"
-  collation = "utf8_general_ci"
+module "Databases" {
+
+	source = "./modules/Databases"
+
+	project                 = var.project
+	sqlinstancename		= module.sqldbinstance.sqldbinstancename
+
 }
 
-resource "google_sql_user" "users" {
-  name = "root"
-  project      = var.project
-  instance = google_sql_database_instance.master.name
-  host = "%"
-  password = "Chethan@12"
+module "sqluser" {
+
+	source = "./modules/sqluser"
+
+	project                 = var.project
+        sqlinstancename         = module.sqldbinstance.sqldbinstancename
+
 }
+
