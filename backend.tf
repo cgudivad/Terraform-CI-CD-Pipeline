@@ -1,6 +1,6 @@
 terraform {
   backend "gcs" {
     bucket  = "cg1-bucket"
-    prefix  = "Terraform/state/prod"
+    prefix  = "Terraform/state/staging"
   }
 }
