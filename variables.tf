@@ -3,31 +3,31 @@ variable "project" {
 }
 
 variable "vpcnetworkname" {
-	default = "prod-vpc-network"
+	default = "dev-vpc-network"
 }
 
 variable "subnetworkname" {
-        default = "prod-test-subnetwork"
+        default = "dev-test-subnetwork"
 }
 
 variable "firewallname" {
-        default = "prod-firewall-rule"
+        default = "dev-firewall-rule"
 }
 
 variable "vmname" {
-        default = "prod-tf-vm-"
+        default = "dev-tf-vm-"
 }
 
 variable "privateipname" {
-        default = "prod-private-ip"
+        default = "dev-private-ip"
 }
 
 variable "privatevpcname" {
-        default = "prod-private-vpc"
+        default = "dev-private-vpc"
 }
 
 variable "sqlinstancename" {
-        default = "prod-sql-instance"
+        default = "dev-sql-instance"
 }
 
 variable "CIDR" {
