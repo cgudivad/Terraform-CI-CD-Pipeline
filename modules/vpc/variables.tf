@@ -1,5 +1,0 @@
-variable "network" {
-}
-
-variable "project" {
-}
