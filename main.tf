@@ -1,4 +1,4 @@
-module "vpcnetwork" {
+module "network" {
 
         source = "git::https://github.com/cgudivad/Terraform-Modules.git//network?ref=tags/V0.0.2"
 
