@@ -43,5 +43,5 @@ variable "zone" {
 }
 
 variable "vmcount" {
-	default = 2
+	default = 3
 }
