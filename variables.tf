@@ -3,7 +3,7 @@ variable "project" {
 }
 
 variable "vpcnetworkname" {
-	default = "dev-vpc-network"
+	default = "dev-vpcnetwork"
 }
 
 variable "subnetworkname" {
@@ -45,4 +45,3 @@ variable "zone" {
 variable "vmcount" {
 	default = 2
 }
-
