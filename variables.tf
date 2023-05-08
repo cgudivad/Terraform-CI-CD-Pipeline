@@ -7,11 +7,11 @@ variable "vpcnetworkname" {
 }
 
 variable "subnetworkname" {
-        default = "dev-test-subnetwork"
+        default = "dev-testsubnetwork"
 }
 
 variable "firewallname" {
-        default = "dev-firewall-rule"
+        default = "dev-firewallrule"
 }
 
 variable "vmname" {
