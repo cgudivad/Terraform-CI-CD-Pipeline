@@ -1,3 +1,4 @@
+
 variable "project" {
         default = "cg-project-374417"
 }
@@ -35,11 +36,11 @@ variable "CIDR" {
 }
 
 variable "region" {
-        default = "us-east1"
+        default = "us-central1"
 }
 
 variable "zone" {
-        default = "us-east1-b"
+        default = "us-central1-b"
 }
 
 variable "vmcount" {
