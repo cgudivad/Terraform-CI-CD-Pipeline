@@ -35,13 +35,13 @@ variable "CIDR" {
 }
 
 variable "region" {
-        default = "us-east1"
+        default = "us-central1"
 }
 
 variable "zone" {
-        default = "us-east1-b"
+        default = "us-central1-b"
 }
 
 variable "vmcount" {
-	default = 3
+	default = 2
 }
